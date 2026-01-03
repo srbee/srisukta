@@ -1,1 +1,434 @@
- 
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>श्री सूक्त फ्लॅश कार्ड्स</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fed7aa 0%, #fef3c7 50%, #fecaca 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .counter {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #9a3412;
+        }
+
+        .card-wrapper {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 24px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #fb923c 0%, #fbbf24 50%, #fcd34d 100%);
+            border: 4px solid #c2410c;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #f87171 0%, #fb7185 50%, #fb923c 100%);
+            border: 4px solid #b91c1c;
+            transform: rotateY(180deg);
+        }
+
+        .emoji {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .shlok-text {
+            font-size: 20px;
+            line-height: 1.8;
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .meaning-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+
+        .title-text {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .btn-prev, .btn-next {
+            background: #ea580c;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-prev:hover, .btn-next:hover {
+            background: #c2410c;
+        }
+
+        .btn-prev:disabled, .btn-next:disabled {
+            background: #d1d5db;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+        .btn-flip {
+            background: #eab308;
+            color: white;
+        }
+
+        .btn-flip:hover {
+            background: #ca8a04;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .instructions h3 {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+
+        .instruction-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .instruction-box {
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .inst-left {
+            background: #dbeafe;
+        }
+
+        .inst-center {
+            background: #d1fae5;
+        }
+
+        .inst-right {
+            background: #dbeafe;
+        }
+
+        .inst-title {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        @media (max-width: 480px) {
+            .shlok-text {
+                font-size: 18px;
+            }
+            .meaning-text {
+                font-size: 16px;
+            }
+            .title-text {
+                font-size: 28px;
+            }
+            button {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="counter" id="counter">1 / 17</div>
+
+        <div class="card-wrapper" id="cardWrapper">
+            <div class="card" id="card">
+                <div class="card-face card-front" id="cardFront"></div>
+                <div class="card-face card-back" id="cardBack"></div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-prev" id="btnPrev">
+                ◀ मागे
+            </button>
+            <button class="btn-flip" id="btnFlip">
+                फ्लिप 🔄
+            </button>
+            <button class="btn-next" id="btnNext">
+                पुढे ▶
+            </button>
+        </div>
+
+        <div class="instructions">
+            <h3>📱 कार्ड वापरण्याची पद्धत:</h3>
+            <div class="instruction-grid">
+                <div class="instruction-box inst-left">
+                    <div class="inst-title">⬅️ डावीकडे</div>
+                    <div>(0-40%)</div>
+                    <div>मागे</div>
+                </div>
+                <div class="instruction-box inst-center">
+                    <div class="inst-title">🔄 मध्ये</div>
+                    <div>(40-60%)</div>
+                    <div>फ्लिप</div>
+                </div>
+                <div class="instruction-box inst-right">
+                    <div class="inst-title">उजवीकडे ➡️</div>
+                    <div>(60-100%)</div>
+                    <div>पुढे</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cards = [
+            {
+                front: '<div class="emoji">🪔</div><div class="title-text">🪷 श्री सूक्त 🪷</div><div class="emoji" style="margin-top:15px">🕉️</div>',
+                back: '<div class="emoji">🙏</div><div class="welcome-text">स्वागत आहे</div><div class="emoji" style="margin-top:15px">✨</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">हिरण्यवर्णां हरिणीं सुवर्णरजतस्रजाम् |<br>चन्द्रां हिरण्मयीं लक्ष्मीं जातवेदो म आवह ||१||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">सोन्याच्या रंगाची, हिरव्या रंगाची, सोने-चांदीच्या माळा धारण केलेली, चंद्राप्रमाणे शीतल आणि सोन्याने युक्त अशा लक्ष्मीला, हे जातवेदा अग्नी देवा, माझ्याकडे आणे.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">तां म आवह जातवेदो लक्ष्मीमनपगामिनीम् |<br>यस्यां हिरण्यं विन्देयं गामश्वं पुरुषानहम् ||२||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">ज्या लक्ष्मीमुळे मला धन, गाय, घोडे आणि सेवक मिळतील, अशा कधीही न जाणाऱ्या लक्ष्मीला माझ्याकडे आणा.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">अश्वपूर्वां रथमध्यां हस्तिनादप्रमोदिनीम् |<br>श्रियं देवीमुपह्वये श्रीर्मा देवी जुषताम् ||३||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">ज्या देवी पुढे घोडे, मध्ये रथ आणि हत्तींच्या आवाजाने प्रमोदित होणारी आहे, अशा श्री देवीला मी आवाहन करतो. श्री देवी मला प्रसन्न व्हावी.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">कां सोस्मितां हिरण्यप्राकारामार्द्रां ज्वलन्तीं तृप्तां तर्पयन्तीम् |<br>पद्मे स्थितां पद्मवर्णां तामिहोपह्वये श्रियम् ||४||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">जी सुंदर हास्य करणारी, सोन्याच्या भिंतींनी युक्त, तेजस्वी, संतुष्ट, सर्वांना तृप्त करणारी, कमळावर बसलेली, कमळाच्या रंगाची आहे, अशा श्रीला मी येथे आवाहन करतो.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">चन्द्रां प्रभासां यशसा ज्वलन्तीं श्रियं लोके देवजुष्टामुदाराम् |<br>तां पद्मिनीमीं शरणमहं प्रपद्येऽलक्ष्मीर्मे नश्यतां त्वां वृणे ||५||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">जी चंद्राप्रमाणे शीतल, प्रकाशमान, यशाने तेजस्वी, लोकात देवांनी पूजित आणि उदार आहे, अशा कमलासनी देवीचा मी आश्रय घेतो. माझे दारिद्र्य नष्ट होवो, तुझी मी वरण करतो.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">आदित्यवर्णे तपसोऽधिजातो वनस्पतिस्तव वृक्षोऽथ बिल्वः |<br>तस्य फलानि तपसा नुदन्तु मायान्तरायाश्च बाह्या अलक्ष्मीः ||६||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">हे सूर्याच्या रंगाची देवी! तुझ्या तपश्चर्येतून जन्मलेला बिल्ववृक्ष, त्याची फळे तपाने माझे आंतरिक-बाह्य सर्व अलक्ष्मी (दरिद्रता) दूर करोत.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">उपैतु मां देवसखः कीर्तिश्च मणिना सह |<br>प्रादुर्भूतोऽस्मि राष्ट्रेऽस्मिन् कीर्तिमृद्धिं ददातु मे ||७||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">देवांचा मित्र आणि कीर्ती रत्नांसह माझ्याकडे येवो. मी या राष्ट्रात प्रकट झालो आहे, मला कीर्ती आणि समृद्धी मिळो.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">क्षुत्पिपासामलां ज्येष्ठामलक्ष्मीं नाशयाम्यहम् |<br>अभूतिमसमृद्धिं च सर्वां निर्णुद मे गृहात् ||८||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">भूक, तहान आणि मलिनता या ज्येष्ठ अलक्ष्मीला मी नष्ट करतो. अभाव आणि दारिद्र्य माझ्या घरातून दूर करा.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">गन्धद्वारां दुराधर्षां नित्यपुष्टां करीषिणीम् |<br>ईश्वरीं सर्वभूतानां तामिहोपह्वये श्रियम् ||९||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">जी सुगंधाचे द्वार आहे, अजिंक्य आहे, नित्य पुष्ट आहे, पृथ्वीस्वरूपा आहे आणि सर्व प्राण्यांची ईश्वरी आहे, अशा श्रीला मी येथे आवाहन करतो.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">मनसः काममाकूतिं वाचः सत्यमशीमहि |<br>पशूनां रूपमन्नस्य मयि श्रीः श्रयतां यशः ||१०||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">मनाची इच्छापूर्ती, वाणीची सत्यता, पशुधन, अन्न आणि यश माझ्यात स्थिर होवो. श्री माझ्यात निवास करो.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">कर्दमेन प्रजाभूता मयि सम्भव कर्दम |<br>श्रियं वासय मे कुले मातरं पद्ममालिनीम् ||११||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">हे कर्दम ऋषींच्या पत्नी लक्ष्मी! तू माझ्यात प्रकट हो. कमलमाला धारण केलेल्या माता श्रीला माझ्या कुळात वास द्या.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">आपः सृजन्तु स्निग्धानि चिक्लीत वस मे गृहे |<br>नि च देवीं मातरं श्रियं वासय मे कुले ||१२||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">पाणी स्निग्धता (प्रेम) निर्माण करो. हे चिक्लीत देवी! माझ्या घरात वास कर. आणि देवी माता श्रीला माझ्या कुळात स्थापित कर.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">आर्द्रां पुष्करिणीं पुष्टिं पिङ्गलां पद्ममालिनीम् |<br>चन्द्रां हिरण्मयीं लक्ष्मीं जातवेदो म आवह ||१३||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">ओलसर, कमळिनीस्वरूप, पुष्ट, पिवळसर, कमलमाला धारण केलेली, चंद्रप्रभावाली, सुवर्णमय लक्ष्मीला, हे जातवेदा, माझ्याकडे आणा.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">आर्द्रां यः करिणीं यष्टिं सुवर्णां हेममालिनीम् |<br>सूर्यां हिरण्मयीं लक्ष्मीं जातवेदो म आवह ||१४||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">ओलसर, हत्तिणीप्रमाणे गंभीर, दंडधारिणी, सुवर्णमय, सोन्याच्या माळा घातलेली, सूर्यप्रभावाली, स्वर्णमय लक्ष्मीला, हे जातवेदा, माझ्याकडे आणा.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">तां म आवह जातवेदो लक्ष्मीमनपगामिनीम् |<br>यस्यां हिरण्यं प्रभूतं गावो दास्योऽश्वान्विन्देयं पुरुषानहम् ||१५||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">ज्या लक्ष्मीमुळे मला विपुल सोने, गाई, सेवक, घोडे आणि पुरुष प्राप्त होतील, अशा कधी न जाणाऱ्या लक्ष्मीला माझ्याकडे आणा.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">यः शुचिः प्रयतो भूत्वा जुहुयादाज्यमन्वहम् |<br>श्रियः पञ्चदशर्चं च श्रीकामः सततं जपेत् ||१६||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">जो शुद्ध, संयमी होऊन रोज तूप अर्पण करतो आणि श्रीची इच्छा धरून श्री सूक्ताच्या पंधरा मंत्रांचा सतत जप करतो, त्याला श्री प्राप्त होते.</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            },
+            {
+                front: '<div class="emoji">🪷</div><div class="shlok-text">ॐ महालक्ष्म्यै च विद्महे |<br>विष्णुपत्न्यै च धीमहि |<br>तन्नो लक्ष्मीः प्रचोदयात् ||</div><div class="emoji" style="margin-top:15px">🌺</div>',
+                back: '<div class="emoji">🌸</div><div class="meaning-text">ॐ आम्ही महालक्ष्मीला जाणतो, विष्णूच्या पत्नीचे ध्यान करतो. ती लक्ष्मी आम्हाला (सद्बुद्धीने) प्रेरित करो. - लक्ष्मी गायत्री मंत्र</div><div class="emoji" style="margin-top:15px">🙏</div>'
+            }
+        ];
+
+        let currentCard = 0;
+        let isFlipped = false;
+
+        const card = document.getElementById('card');
+        const cardFront = document.getElementById('cardFront');
+        const cardBack = document.getElementById('cardBack');
+        const counter = document.getElementById('counter');
+        const btnPrev = document.getElementById('btnPrev');
+        const btnNext = document.getElementById('btnNext');
+        const btnFlip = document.getElementById('btnFlip');
+        const cardWrapper = document.getElementById('cardWrapper');
+
+        function updateCard() {
+            cardFront.innerHTML = cards[currentCard].front;
+            cardBack.innerHTML = cards[currentCard].back;
+            counter.textContent = (currentCard + 1) + ' / ' + cards.length;
+            
+            btnPrev.disabled = (currentCard === 0);
+            btnNext.disabled = (currentCard === cards.length - 1);
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            if (isFlipped) {
+                card.classList.add('flipped');
+            } else {
+                card.classList.remove('flipped');
+            }
+        }
+
+        function nextCard() {
+            if (currentCard < cards.length - 1) {
+                currentCard++;
+                isFlipped = false;
+                card.classList.remove('flipped');
+                updateCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentCard > 0) {
+                currentCard--;
+                isFlipped = false;
+                card.classList.remove('flipped');
+                updateCard();
+            }
+        }
+
+        btnPrev.addEventListener('click', prevCard);
+        btnNext.addEventListener('click', nextCard);
+        btnFlip.addEventListener('click', flipCard);
+
+        cardWrapper.addEventListener('click', function(e) {
+            var rect = cardWrapper.getBoundingClientRect();
+            var x = e.clientX - rect.left;
+            var width = rect.width;
+            var centerStart = width * 0.4;
+            var centerEnd = width * 0.6;
+            
+            if (x >= centerStart && x <= centerEnd) {
+                flipCard();
+            } else if (x < centerStart) {
+                prevCard();
+            } else {
+                nextCard();
+            }
+        });
+
+        cardWrapper.addEventListener('touchend', function(e) {
+            var touch = e.changedTouches[0];
+            var rect = cardWrapper.getBoundingClientRect();
+            var x = touch.clientX - rect.left;
+            var width = rect.width;
+            var centerStart = width * 0.4;
+            var centerEnd = width * 0.6;
+            
+            if (x >= centerStart && x <= centerEnd) {
+                flipCard();
+            } else if (x < centerStart) {
+                prevCard();
+            } else {
+                nextCard();
+            }
+        });
+
+        updateCard();
+    </script>
+</body>
+</html> 
